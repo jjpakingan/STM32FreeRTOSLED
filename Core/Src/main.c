@@ -285,7 +285,10 @@ void StartTask02(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_3);
+	osal_osDelay(1000);
+	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_3);
+	osal_osDelay(1000);
   }
   /* USER CODE END StartTask02 */
 }
@@ -303,7 +306,7 @@ void StartTask03(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    osDelay(1000);
   }
   /* USER CODE END StartTask03 */
 }
@@ -321,7 +324,7 @@ void StartTask04(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    osDelay(1000);
   }
   /* USER CODE END StartTask04 */
 }

@@ -2,8 +2,8 @@
 FREERTOS.FootprintOK=true
 FREERTOS.IPParameters=Tasks01,configUSE_PREEMPTION,configTICK_RATE_HZ,FootprintOK
 FREERTOS.Tasks01=defaultTask,24,128,StartDefaultTask,Default,NULL,Dynamic,NULL,NULL;task2Led1000mse,24,128,StartTask02,Default,NULL,Dynamic,NULL,NULL;task3LedMessage,24,128,StartTask03,Default,NULL,Dynamic,NULL,NULL;task4LedMessage,24,128,StartTask04,Default,NULL,Dynamic,NULL,NULL
-FREERTOS.configTICK_RATE_HZ=100
-FREERTOS.configUSE_PREEMPTION=1
+FREERTOS.configTICK_RATE_HZ=1000
+FREERTOS.configUSE_PREEMPTION=0
 File.Version=6
 GPIO.groupedBy=Group By Peripherals
 KeepUserPlacement=false
