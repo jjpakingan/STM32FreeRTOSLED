@@ -4,4 +4,6 @@
  */
 #pragma once
 
-#define osal_osDelay(x)		osDelay(x)
+#define osal_osDelay				osDelay
+#define osal_osMessageQueuePut 		osMessageQueuePut
+#define osal_osMessageQueueGet		osMessageQueueGet

@@ -34,6 +34,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define DEFAULT_VAL_MSG_QUEUE 3
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -309,7 +310,6 @@ void StartTask02(void *argument)
 * @retval None
 */
 /* USER CODE END Header_StartTask03 */
-#define DEFAULT_VAL_MSG_QUEUE 3
 void StartTask03(void *argument)
 {
   /* USER CODE BEGIN StartTask03 */
@@ -321,7 +321,7 @@ void StartTask03(void *argument)
 	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
 	osal_osDelay(3000);
 	val = DEFAULT_VAL_MSG_QUEUE;
-	osMessageQueuePut(myQueueForLedHandle, &val, NULL, 0U);
+	osal_osMessageQueuePut(myQueueForLedHandle, &val, NULL, 0U); // task4 will receive this
   }
   /* USER CODE END StartTask03 */
 }
@@ -342,7 +342,7 @@ void StartTask04(void *argument)
   for(;;)
   {
 	  receivedVal = 0;
-	  status = osMessageQueueGet(myQueueForLedHandle, &receivedVal, NULL, osWaitForever);   // wait for message
+	  status = osMessageQueueGet(myQueueForLedHandle, &receivedVal, NULL, osWaitForever);   // wait for message from task3
 	    if (status == osOK && receivedVal == DEFAULT_VAL_MSG_QUEUE)
 	    {
 	  	  for (int ctr=0;ctr<4;ctr++)
