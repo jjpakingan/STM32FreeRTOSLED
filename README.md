@@ -1,4 +1,4 @@
-# FreeRTOS SMT32 Project
+# FreeRTOS STM32 Project
 
 **Author:** Jeff Pakingan
 
