@@ -1,14 +1,14 @@
-FreeRTOS SMT32 LED Prototype Project
+# FreeRTOS SMT32 LED Prototype Project
 
-Author: Jeff Pakingan
+**Author:** Jeff Pakingan
 
-Environment:
+**Environment:**
 - STM32CubeIDE
 - FreeRTOS with CMSIS v2 API
 - STM32 Blue Pill
 
 
-Project Description:
+**Project Description:**
 - FreeRTOS in Preemptive Mode
 - OS Abstraction Layer implementation
 - 4 tasks are running in Parallel
