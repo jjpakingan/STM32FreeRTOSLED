@@ -70,6 +70,11 @@ const osThreadAttr_t task4LedMessage_attributes = {
   .priority = (osPriority_t) osPriorityNormal,
   .stack_size = 128 * 4
 };
+/* Definitions for myQueueForLed */
+osMessageQueueId_t myQueueForLedHandle;
+const osMessageQueueAttr_t myQueueForLed_attributes = {
+  .name = "myQueueForLed"
+};
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -137,6 +142,10 @@ int main(void)
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
+
+  /* Create the queue(s) */
+  /* creation of myQueueForLed */
+  myQueueForLedHandle = osMessageQueueNew (16, sizeof(uint16_t), &myQueueForLed_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -300,13 +309,19 @@ void StartTask02(void *argument)
 * @retval None
 */
 /* USER CODE END Header_StartTask03 */
+#define DEFAULT_VAL_MSG_QUEUE 3
 void StartTask03(void *argument)
 {
   /* USER CODE BEGIN StartTask03 */
   /* Infinite loop */
+  // Send Message Queue
+  uint16_t val;
   for(;;)
   {
-    osDelay(1000);
+	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
+	osal_osDelay(3000);
+	val = DEFAULT_VAL_MSG_QUEUE;
+	osMessageQueuePut(myQueueForLedHandle, &val, NULL, 0U);
   }
   /* USER CODE END StartTask03 */
 }
@@ -321,10 +336,21 @@ void StartTask03(void *argument)
 void StartTask04(void *argument)
 {
   /* USER CODE BEGIN StartTask04 */
+  uint16_t receivedVal;
+  osStatus_t status;
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1000);
+	  receivedVal = 0;
+	  status = osMessageQueueGet(myQueueForLedHandle, &receivedVal, NULL, osWaitForever);   // wait for message
+	    if (status == osOK && receivedVal == DEFAULT_VAL_MSG_QUEUE)
+	    {
+	  	  for (int ctr=0;ctr<4;ctr++)
+	  		  {
+	  		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_5);
+	  		  osal_osDelay(100);
+	  		  }
+	    }
   }
   /* USER CODE END StartTask04 */
 }
