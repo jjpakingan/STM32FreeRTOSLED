@@ -1,4 +1,4 @@
-# FreeRTOS SMT32 LED Prototype Project
+# FreeRTOS SMT32 Project
 
 **Author:** Jeff Pakingan
 
