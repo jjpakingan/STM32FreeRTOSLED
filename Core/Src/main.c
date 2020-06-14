@@ -41,6 +41,7 @@
 #define USE_MESSAGE_QUEUE	0
 
 #define FLAGS_MSK1 0x00000001U
+#define FLAGS_MSK2 0x00000002U
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -350,9 +351,12 @@ void StartTask03(void *argument)
   // Send Message Queue
   for(;;)
   {
+	// task4 will receive the event flags
 	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
+	osEventFlagsSet(evt_id, FLAGS_MSK1);
 	osal_osDelay(3000);
-	osEventFlagsSet(evt_id, FLAGS_MSK1);// task4 will receive this
+	osEventFlagsSet(evt_id, FLAGS_MSK2);
+	osal_osDelay(3000);
   }
 #endif
 
@@ -393,8 +397,10 @@ void StartTask04(void *argument)
   /* Infinite loop */
   for(;;)
   {
-	flags = osEventFlagsWait(evt_id, FLAGS_MSK1, osFlagsWaitAny, osWaitForever); // wait for message from task3
-	if (flags & FLAGS_MSK1)
+	flags = osEventFlagsWait(evt_id, FLAGS_MSK1|FLAGS_MSK2, osFlagsWaitAny, osWaitForever); // wait for message from task3
+
+	if ((flags & FLAGS_MSK1) || (flags & FLAGS_MSK2))
+	//if (flags & FLAGS_MSK1) // test if flag will automatically reset
 	{
 	  for (int ctr=0;ctr<4;ctr++)
 		  {
