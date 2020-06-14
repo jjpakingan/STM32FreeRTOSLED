@@ -11,8 +11,9 @@
 **Project Description:**
 - FreeRTOS in Preemptive Mode
 - OS Abstraction Layer implementation
+- Task notification using MessageQueue and Event Flags
 - 4 tasks are running in Parallel
   - Task 1 - LED Toggle for 500ms
   - Task 2 - LED Toggle for 1000ms
-  - Task 3 - Message Queue to send message to Task 4
-  - Task 4 - Message Queue receive from Task 3
+  - Task 3 - Message Queue/Event Flags to send message to Task 4
+  - Task 4 - Message Queue/Event Flags receive from Task 3
