@@ -342,7 +342,7 @@ void StartTask04(void *argument)
   for(;;)
   {
 	  receivedVal = 0;
-	  status = osMessageQueueGet(myQueueForLedHandle, &receivedVal, NULL, osWaitForever);   // wait for message from task3
+	  status = osal_osMessageQueueGet(myQueueForLedHandle, &receivedVal, NULL, osal_osWaitForever);   // wait for message from task3
 	    if (status == osOK && receivedVal == DEFAULT_VAL_MSG_QUEUE)
 	    {
 	  	  for (int ctr=0;ctr<4;ctr++)
