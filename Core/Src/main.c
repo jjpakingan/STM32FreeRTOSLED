@@ -35,6 +35,12 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define DEFAULT_VAL_MSG_QUEUE 3
+#define SIGNAL_WAIT_ID	0x0001
+
+#define USE_SIGNAL_WAIT		1
+#define USE_MESSAGE_QUEUE	0
+
+#define FLAGS_MSK1 0x00000001U
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -97,6 +103,8 @@ void StartTask04(void *argument);
 
 /* USER CODE END 0 */
 
+osEventFlagsId_t evt_id;                        // event flags id
+
 /**
   * @brief  The application entry point.
   * @retval int
@@ -134,6 +142,7 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
+  evt_id = osEventFlagsNew(NULL);
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
@@ -261,6 +270,16 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE END 4 */
 
+/* USER CODE BEGIN */
+//-#######-----------------------------
+//----#------##----####--#----#--####--
+//----#-----#--#--#------#---#--#------
+//----#----#----#--####--####----####--
+//----#----######------#-#--#--------#-
+//----#----#----#-#----#-#---#--#----#-
+//----#----#----#--####--#----#--####--
+/* USER CODE END */
+
 /* USER CODE BEGIN Header_StartDefaultTask */
 /**
   * @brief  Function implementing the defaultTask thread.
@@ -313,6 +332,7 @@ void StartTask02(void *argument)
 void StartTask03(void *argument)
 {
   /* USER CODE BEGIN StartTask03 */
+#if USE_MESSAGE_QUEUE
   /* Infinite loop */
   // Send Message Queue
   uint16_t val;
@@ -323,6 +343,19 @@ void StartTask03(void *argument)
 	val = DEFAULT_VAL_MSG_QUEUE;
 	osal_osMessageQueuePut(myQueueForLedHandle, &val, NULL, 0U); // task4 will receive this
   }
+#endif
+
+#if USE_SIGNAL_WAIT
+  /* Infinite loop */
+  // Send Message Queue
+  for(;;)
+  {
+	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
+	osal_osDelay(3000);
+	osEventFlagsSet(evt_id, FLAGS_MSK1);// task4 will receive this
+  }
+#endif
+
   /* USER CODE END StartTask03 */
 }
 
@@ -336,6 +369,7 @@ void StartTask03(void *argument)
 void StartTask04(void *argument)
 {
   /* USER CODE BEGIN StartTask04 */
+#if USE_MESSAGE_QUEUE
   uint16_t receivedVal;
   osStatus_t status;
   /* Infinite loop */
@@ -352,6 +386,25 @@ void StartTask04(void *argument)
 	  		  }
 	    }
   }
+#endif
+
+#if USE_SIGNAL_WAIT
+  uint32_t flags;
+  /* Infinite loop */
+  for(;;)
+  {
+	flags = osEventFlagsWait(evt_id, FLAGS_MSK1, osFlagsWaitAny, osWaitForever); // wait for message from task3
+	if (flags & FLAGS_MSK1)
+	{
+	  for (int ctr=0;ctr<4;ctr++)
+		  {
+		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_5);
+		  osal_osDelay(100);
+		  }
+	}
+  }
+#endif
+
   /* USER CODE END StartTask04 */
 }
 
